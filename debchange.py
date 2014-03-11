@@ -29,10 +29,13 @@ info['debemail'] = os.environ.get('DEBEMAIL', 'name@example.org')
 # date format example: Fri, 13 Jul 2012 15:05:04 +0200
 info['debian_formatted_date'] = time.strftime("%a, %d %b %Y %H:%M:%S +0200", time.localtime())
 
-# Templated Changelog Entry 
+# Get message from CLI arguments
+message = sys.argv[1:].join(' ')
+
+# Templated Changelog Entry
 template = """%(pkg_name)s (%(pkg_version)s) %(pkg_distrib)s; urgency=low
 
-  * 
+  * %(message)s
 
  -- %(debfullname)s <%(debemail)s>  %(debian_formatted_date)s
 
@@ -46,8 +49,8 @@ with tempfile.NamedTemporaryFile() as f:
 	f.write(pushed_content)
 	f.flush()
 
-	# Spawn Editor 
+	# Spawn Editor
   	call([EDITOR, f.name])
 
-	# Copy new file 
+	# Copy new file
 	shutil.copyfile(f.name, "debian/changelog")
